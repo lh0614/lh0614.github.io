@@ -6,8 +6,7 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
-    "preinstall": "npx only-allow yarn"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "autoprefixer": "^8.0.0",

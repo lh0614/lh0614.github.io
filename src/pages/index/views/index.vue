@@ -1,24 +1,205 @@
 <template>
-  <div class="container">
-    <van-button type="primary">主要按钮</van-button>
+  <div class="game-instructions">
+    <div style="text-align: center">欢迎大道的兄弟姐妹</div>
+    <br />
+    <van-tabs v-model="activeTab" @change="onTabChange">
+      <van-tab title="属性说明" name="attributes"></van-tab>
+      <van-tab title="增减说明" name="increments"></van-tab>
+      <van-tab title="强弱灵/疗" name="qrll"></van-tab>
+      <van-tab title="氪金说明" name="money"></van-tab>
+      <van-tab title="游戏规则" name="yxgz"></van-tab>
+      <van-tab title="灵兽技能" name="lssm"></van-tab>
+      <van-tab title="写在最后" name="last"></van-tab>
+      <!-- <van-tab title="推图说明" name="strategy"></van-tab>
+      <van-tab title="推图说明" name="strategy"></van-tab>
+      <van-tab title="推图说明" name="strategy"></van-tab> -->
+    </van-tabs>
+
+    <div class="tab-content">
+      <div v-if="activeTab === 'attributes'">
+        <h3>属性说明</h3>
+        <p>
+          我们要分三类属性，分别是基础属性、战斗属性和其他属性。
+          <br />
+          基础属性：攻击、防御、生命、敏捷。
+          <br />
+          战斗属性：例如暴击率、抗暴击等
+          <br />
+          其他属性：例如增减、强弱灵，强弱疗等
+        </p>
+        <p>
+          在只有基础属性的情况下：
+          <br />
+          实际伤害 = 攻击-防御
+          <br />
+          敏捷影响的是出手的先后。有的时候很关键，比如你是道法，对面敏捷比你高，带了蚀魂，那你道法就是放不出来。
+        </p>
+        <p>
+          战斗属性：例如暴击率、抗暴击等
+          <br />
+          实际概率 = 暴击率 - 抗暴击 + 无视抗性。
+          <br />
+          这里要说明的： 击晕，闪避的上限是 80%；无论你高出对方多少，实际最高值就是 80%
+        </p>
+      </div>
+      <div v-if="activeTab === 'increments'">
+        <h3>增减说明</h3>
+        <div>增减伤很重要</div>
+        <p>
+          拥有增伤： 实际伤害 = (攻击-防御) * (1+增伤)
+          <br />
+          拥有减伤： 实际伤害 = (攻击-防御) * (1-减伤)
+          <br />
+          拥有增伤和减伤： 实际伤害 = (攻击-防御) * (1+增伤-减伤)
+          <br />
+        </p>
+        <p>
+          这里还有法宝的格挡和破甲：
+          <br />
+          【破甲】：高出对手抗破甲数值，将按比例无视敌方的最终减伤，最高上限50%；触发条件：造成伤害时，如果破甲高于敌方抗破甲，有概率触发破甲效果；
+          <br />
+          破甲系数：
+          <br />
+          (破甲 - 抗破甲) / 10000
+          <br />
+          计算公式：触发破甲时，敌方最终减伤 = 对方最终减伤*（1 - 破甲系数）
+        </p>
+        <p>
+          【格挡】：高出对手抗格挡数值，将按比例无视敌方的最终增伤，最高上限50%；触发条件：造成伤害时，如果格挡高于敌方抗格挡，有概率触发格挡效果；
+          <br />
+          格挡系数：
+          <br />
+          (格挡 - 抗格挡) / 10000
+          <br />
+          计算公式：触发格挡时，敌方最终增伤 = 对方最终增伤*（1 - 格挡系数）
+        </p>
+        <p>
+          增减伤的来源：
+          <br />
+          精怪，神通，法宝，装备精炼，宗门弟子，仙友，法则，灵兽塑魂。
+          <br />
+          不仅精怪共鸣带增减，精怪自身也带增减。
+          <br />
+          宗门弟子只有小属性带增减。
+          <br />
+          神通共鸣和神通石头带增减。
+          <br />
+          法宝自身和法宝套装带增减。
+          <br />
+          装备精炼达到一定等级带增减。
+          <br />
+          仙友有增减属性的。
+          <br />
+          法则最后的至尊法则，有增减伤。
+          <br />
+          灵兽塑魂有增伤。
+        </p>
+      </div>
+      <div v-if="activeTab === 'qrll'">
+        <h3>强弱灵/疗说明</h3>
+        <p>强弱灵影响什么？</p>
+        <p>
+          顾名思义强化灵兽 即提升灵兽的基础倍率。所以强弱灵只影响宠物。
+          <br />
+          常见的应龙， 假如人物10亿面板。100灵兽强化 不考虑增减面板波动其他因素
+          应龙实际伤害应为110亿。
+          <br />
+          伤害计算方式:
+          <br />
+          人物实战面板*宠物技能倍率*（灵兽强化➕1）*（增减差➕1）=宠物伤害
+          <br />
+          奶宠计算方式:
+          <br />
+          人物实战面板*宠物技能倍率*（强弱灵差➕1）*（强弱疗差➕1)=宠物治疗量
+        </p>
+        <p>强弱疗影响什么？</p>
+        <p>
+          强弱疗影响所有跟治疗相关的一切，包括复活后的回血以及奶宠和自人物本身的治疗。
+          <br />
+          <br />
+          实际治疗量 = 你/对手的治疗量 *（强弱疗差➕1)
+        </p>
+      </div>
+      <div v-if="activeTab === 'money'">
+        <h3>氪金说明</h3>
+        <p>
+          这里是我对大家的一个提醒：大家充值金额不要超过自身收入的 5%-10%。学生党你的最大能力就是 6
+          块。富二代除外。
+        </p>
+        <p>禁止上头！</p>
+        <p>
+          氪金，是为了用金钱缩短时间，从而让你在当下领先其他人的发育，这个和投胎是一样的。这是目的。
+        </p>
+        <p>
+          优先自选的瓶🍑，30 及以下(含)。其次瓶🍑弹窗的 30,68,128。 还有小活动的 30
+          含瓶🍑的。切记一点，价格越贵的礼包越不合适。
+        </p>
+        <p>关于抽奖活动</p>
+        <p>
+          首选增减仙友，同时仙友是第一优先级；其次精怪；当然如果想拿红色法宝，则需要千元及以上，可分多次氪。还是那句话，根据跟人能力。
+        </p>
+        <p>同时精怪在小活动中会有返场，价格 128 块。小活动指（四圣，仙途，龙珠等）</p>
+        <p>基金礼包，累充活动，宝华堂都是性价比很高的。</p>
+        <p>这里都是建议，具体每一个活动如何合理氪，后续出攻略，或关注群置顶。</p>
+      </div>
+      <div v-if="activeTab === 'yxgz'">
+        <h3>游戏规则说明</h3>
+        <p>
+          这是我自己的一些理解。首先，氪度相差不大的情况，瓶🍑在玄仙以前都是最高优先级，桃子&gt;瓶子;桃子永远是战力最高优先级资源。前提你要比别人多一定数量。
+        </p>
+      </div>
+      <div v-if="activeTab === 'lssm'">
+        <h3>灵兽说明</h3>
+        <p>
+          灵兽技能优先级
+          <br />
+          应龙：强灵 除非平民考虑用应龙打架 不然就是强灵就完事 有金强弱疗弱灵可以留
+          <br />
+          青龙：强弱疗＞强化爆伤 毕业技能三弱疗或者三强疗
+          <br />
+          鸾鸟：强疗＞强灵＞弱疗 毕业技能三强疗或者双强疗双强灵 或者双强疗双弱疗 塑魂10补成3+2
+          <br />
+          王八：强疗＝强灵＞弱灵＞弱疗 毕业搭配很多 强疗强灵高就行
+          <br />
+          凤凰：和应龙一样但需要点弱疗 三强灵＋双弱疗塑魂10毕业
+        </p>
+      </div>
+      <div v-if="activeTab === 'last'">
+        <h3>写在最后</h3>
+        <p>
+          团体活动希望大家上点心。凝聚力很重要，你觉得不差你一个，他也这么觉得，那大道就可以解散了。
+          然后希望大家玩的开心。
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-@Component({
-  // components: {},
-})
-export default class IndexView extends Vue {
-  // async mounted() {}
-  // destroyed () {}
+<script>
+export default {
+  data() {
+    return {
+      activeTab: 'qrll', // 设置默认激活的标签
+    }
+  },
+  methods: {
+    onTabChange(name) {
+      this.activeTab = name // 更新当前激活的标签
+    },
+  },
 }
 </script>
 
-<style lang="less" scoped>
-@import './../../../styles/variables.less';
-.container {
-  font-size: 14px;
+<style scoped>
+.game-instructions {
+  padding: 20px;
+}
+
+.tab-content {
+  margin-top: 20px;
+}
+
+h3 {
+  margin: 10px 0;
 }
 </style>
