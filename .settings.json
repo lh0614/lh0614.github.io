@@ -1,8 +1,0 @@
-{ 
-  "eslint.alwaysShowStatus": true,
-  "eslint.quiet": true,
-  "editor.codeActionsOnSave": {
-      "source.fixAll": true, 
-      "source.fixAll.eslint": true 
-  }  
-} 
